@@ -14,7 +14,7 @@ This web app was inspired by a Google Sheets spreadsheet found on the subreddit 
 
 ![first thoughts](/img/wireframe.png "Concepts of app")
 
-The code is available on [Github](https://github.com/emrysr/onebag/) and can be deployed via CI/CD.
+The code is available on [Github](https://github.com/emrysr/nuxt-bags/) and can be deployed via CI/CD.
 
 __Please note that I do not own this data and have not yet discussed this project with the subreddit members.__
 
@@ -22,7 +22,7 @@ This is a toy project and is not intended to be used as a production-ready app.
 
 ## Issues
 
-If you wish to discuss this work or report issues, please use the [Github issue tracker](https://github.com/emrysr/onebag/issues).
+If you wish to discuss this work or report issues, please use the [Github issue tracker](https://github.com/emrysr/nuxt-bags/issues).
 
 I welcome pull requests that improve the app.
 
