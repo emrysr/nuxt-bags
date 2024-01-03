@@ -1,0 +1,27 @@
+{
+  "name": "bags-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/content": "latest",
+    "@nuxt/devtools": "latest",
+    "@nuxt/ui": "latest",
+    "@vueuse/nuxt": "latest",
+    "nuxt": "^3.8.2",
+    "vue": "^3.3.12",
+    "vue-router": "^4.2.5",
+    "vue-virtual-scroll-grid": "^1.11.0"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "latest",
+    "lodash": "^4.17.21",
+    "slugify": "^1.6.6"
+  }
+}
