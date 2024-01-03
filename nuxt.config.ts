@@ -6,4 +6,8 @@ export default defineNuxtConfig({
         viewer: false,
         // viewer: { endpoint: '/_tailwind', exportViewer: true }
     },
+    css: ["~/assets/styles/global.css"],
+    app: {
+        pageTransition: { name: "page", mode: "out-in" },
+    },
 });

@@ -13,6 +13,7 @@
     "@nuxt/content": "latest",
     "@nuxt/devtools": "latest",
     "@nuxt/ui": "latest",
+    "@types/lodash": "^4.14.202",
     "@vueuse/nuxt": "latest",
     "nuxt": "^3.8.2",
     "vue": "^3.3.12",

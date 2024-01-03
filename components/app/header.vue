@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const store = useProductsStore();
 defineProps<{ links: Link[] }>();
 const colorMode = useColorMode();
 
@@ -22,6 +23,12 @@ const isDark = computed({
                     alt=""
                 />
             </NuxtLink>
+            <transition name="fade">
+                <UKbd
+                    v-if="store.has_loaded"
+                    :value="`FOUND ${store.results.length}`"
+                />
+            </transition>
             <div class="grow flex items-center justify-end gap-8 p-4">
                 <NuxtLink
                     v-for="link in links"
@@ -48,7 +55,14 @@ const isDark = computed({
                     />
 
                     <template #fallback>
-                        <div class="w-8 h-8" />
+                        <UButton
+                            icon="i-codicon-blank"
+                            color="slate"
+                            variant="ghost"
+                            square
+                            aria-label="Theme"
+                            class="border-l border-slate-600 pl-8"
+                        />
                     </template>
                 </ClientOnly>
                 <a

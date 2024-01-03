@@ -1,4 +1,4 @@
-import * as slugify from "slugify";
+import slugify from "slugify";
 
 export interface Product {
     [x: string]: string;
@@ -10,6 +10,7 @@ export interface Filters {
     [x: string]: any;
 }
 export const useProductsStore = defineStore("products", () => {
+    const has_loaded = ref(false);
     const breakpoints = [
         { name: "Mobile Small", min: null, max: 393, columns: 1 },
         { name: "Mobile", min: 394, max: 430, columns: 2 },
@@ -34,21 +35,7 @@ export const useProductsStore = defineStore("products", () => {
         return null;
     }
 
-    const parse = (rows: string[][], fields: string[]) =>
-        rows.reduce((acc, curr) => {
-            const product: Product = {};
-            fields.forEach((key, index) => {
-                product[key] = curr[index];
-            });
-            product.slug = slugify(product.name, {
-                lower: true, // convert to lower case, defaults to `false`
-                strict: true, // strip special characters except replacement, defaults to `false`
-            });
-            acc.push(product);
-            return acc;
-        }, [] as Product[]);
-
-    const products = ref();
+    const products = ref<Product[]>([]);
 
     const fetchProducts = async () => {
         const { data, pending, error, refresh } = await useFetch(
@@ -64,27 +51,86 @@ export const useProductsStore = defineStore("products", () => {
                 },
                 onResponse({ request, response, options }) {
                     // Process the response data
+                    has_loaded.value = true;
                 },
                 onResponseError({ request, response, options }) {
                     // Handle the response errors
                 },
             }
         );
-        products_raw.value = [...data.value.values.slice(1)];
-        // console.log(
-        //     keyBy(products_raw.value, function (o) {
-        //         return String.fromCharCode(o.code);
-        //     })
-        // );
+        if (!data.value) {
+            Promise.reject();
+            return;
+        }
+        // api returns column titles as first row.. convert to list of objects keyed by first row
         const fields = data.value.values.slice(0, 1).flat();
-        products.value = parse(products_raw.value, fields);
+        products_raw.value = map(data.value.values.slice(1), (item: string[]) =>
+            zipObject(fields, item)
+        );
+        // add a slug field
+        products.value = map(products_raw.value, (product) => {
+            product.slug = slugify(product.name, {
+                lower: true, // convert to lower case, defaults to `false`
+                strict: true, // strip special characters except replacement, defaults to `false`
+            });
+            return product;
+        });
         return Promise.resolve(products.value);
     };
     const products_raw = ref();
+
+    const DEFAULT_FILTERS = { search: "", company: "", laptop: "" } as Filters;
+    const filters = ref(DEFAULT_FILTERS);
+    const is_filtered = computed(() =>
+        Object.values(filters.value).some(Boolean)
+    );
+    const _filter = (_filters: Filters) => {
+        if (!products.value || !products.value.length) return [];
+        return products.value.filter((product) => {
+            // return all if no filters in place
+            if (!is_filtered.value) return products;
+            // return true if company matches
+            if (product.company === _filters.company) {
+                return true;
+            }
+            // return true if text search has any matches
+            if (
+                _filters.search &&
+                (product.name + product.notes + product.material)
+                    .toLowerCase()
+                    .includes(_filters.search.toLowerCase())
+            ) {
+                return true;
+            }
+            // return true if laptop size matches
+            if (product.laptop === _filters.laptop) {
+                return true;
+            }
+            // return true if boolean fields are set
+            const active_filters = Object.keys(_filters).reduce((acc, curr) => {
+                if (_filters[curr]) acc.push(curr);
+                return acc;
+            }, [] as string[]);
+            const matches = active_filters.map(
+                (field) => !is_falsy(product[field])
+            );
+            // if ALL the active filters match
+            if (matches.every(Boolean)) return true;
+
+            // this item didn't match on any of the above - do not include in results
+            return false;
+        });
+    };
+    const results = computed(() => _filter(filters.value));
+
     return {
         products,
         fetchProducts,
         getBreakpoint,
         products_raw,
+        filters,
+        is_filtered,
+        results,
+        has_loaded,
     };
 });
