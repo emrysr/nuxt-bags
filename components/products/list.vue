@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Grid from "vue-virtual-scroll-grid";
 const store = useProductsStore();
-
 const columns = ref(4);
 const VISIBLE_ROWS = 3;
 const pageProvider = (pageNumber: number, pageSize: any) => {
@@ -12,28 +11,27 @@ const pageProvider = (pageNumber: number, pageSize: any) => {
 };
 </script>
 <template>
-    <div>
-        <Grid
-            :length="store.results.length"
-            :page-size="columns * VISIBLE_ROWS"
-            :page-provider="pageProvider"
-            class="grid"
+    <!-- <div class="c-columns columns-1 sm:columns-2 lg:columns-3 2xl:columns-4">
+        <UCard
+            v-for="product in store.results"
+            :key="product.name"
+            :ui="{ base: 'min-h-80 is-break-inside-avoid' }"
         >
-            <template v-slot:probe>
-                <ProductsCard></ProductsCard>
-            </template>
 
-            <!-- When the item is not loaded, a placeholder is rendered -->
-            <template v-slot:placeholder="{ index, style }">
-                <ProductsCard :style="style"></ProductsCard>
-            </template>
-
-            <!-- Render a loaded item -->
-            <template v-slot:default="{ item, style, index }">
-                <ProductsCard :product="item" :style="style"></ProductsCard>
-            </template>
-        </Grid>
+        </UCard>
     </div>
+
+    <hr /> -->
+
+    <Grid
+        :length="store.results.length"
+        :page-size="columns * VISIBLE_ROWS"
+        :page-provider="pageProvider"
+        class="grid"
+        #default="{ item: product, style }"
+    >
+        <ProductsCard :product :style></ProductsCard>
+    </Grid>
 </template>
 
 <style>

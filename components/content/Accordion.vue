@@ -50,7 +50,6 @@ const props = defineProps<{ items: Item[] }>();
     <UAccordion :items="items">
         <template #default="{ item, index, open }">
             <UButton
-                color="gray"
                 variant="ghost"
                 class="border-b border-gray-200 dark:border-gray-700"
                 :ui="{ rounded: 'rounded-none', padding: { sm: 'p-3' } }"

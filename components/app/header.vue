@@ -23,12 +23,12 @@ const isDark = computed({
                     alt=""
                 />
             </NuxtLink>
-            <transition name="fade">
+            <!-- <Transition name="fade">
                 <UKbd
                     v-if="store.has_loaded"
-                    :value="`FOUND ${store.results.length}`"
+                    :value="`${store.results.length} items`"
                 />
-            </transition>
+            </Transition> -->
             <div class="grow flex items-center justify-end gap-8 p-4">
                 <NuxtLink
                     v-for="link in links"
@@ -46,7 +46,6 @@ const isDark = computed({
                                 ? 'i-heroicons-moon-20-solid'
                                 : 'i-heroicons-sun-20-solid'
                         "
-                        color="slate"
                         variant="ghost"
                         square
                         aria-label="Theme"
@@ -57,7 +56,6 @@ const isDark = computed({
                     <template #fallback>
                         <UButton
                             icon="i-codicon-blank"
-                            color="slate"
                             variant="ghost"
                             square
                             aria-label="Theme"

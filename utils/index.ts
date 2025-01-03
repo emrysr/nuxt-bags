@@ -1,11 +1,12 @@
 import { capitalize } from "lodash";
-import _ from "lodash";
-export { map, zipObject } = _;
+import * as lodash from "lodash";
+const { map, zipObject } = lodash;
+export { map, zipObject };
 
 export const { format: formatNumber } = Intl.NumberFormat("en-GB", {
     notation: "compact",
     maximumFractionDigits: 1,
-    compactDisplay: 'short',
+    compactDisplay: "short",
 });
 
 export const yesno = (value = "") => (!is_falsy(value) ? "Yes" : "No");

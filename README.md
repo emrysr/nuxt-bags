@@ -43,7 +43,15 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 ```bash
 bun install
 ```
+
 > https://bun.sh/
+
+## Upgrade
+
+```sh
+bun update nuxt
+bunx nuxi module add image
+```
 
 ## Development Server
 
@@ -55,9 +63,10 @@ bun run dev
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
-
-## Deployment
+## Deployment
 
 I intend to deploy this app using the Nuxt deployment documentation <https://nuxt.com/deploy>
 
-will probably go with vercel initially.
+using vercel <https://nuxt.com/deploy/vercel>
+
+need to install vercel db services for kv and table dbs

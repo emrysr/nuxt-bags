@@ -37,6 +37,11 @@ export const useProductsStore = defineStore("products", () => {
 
     const products = ref<Product[]>([]);
 
+    // make computed products_mock which is a small subset of products
+    const products_mock = computed(() => {
+        return products.value.slice(0, 3);
+    });
+
     const fetchProducts = async () => {
         const { data, pending, error, refresh } = await useFetch(
             "/api/products/",
@@ -44,7 +49,7 @@ export const useProductsStore = defineStore("products", () => {
                 onRequest({ request, options }) {
                     // Set the request headers
                     options.headers = options.headers || {};
-                    options.headers.authorization = "...";
+                    options.headers.set("Authorization", "...");
                 },
                 onRequestError({ request, options, error }) {
                     // Handle the request errors
@@ -121,10 +126,49 @@ export const useProductsStore = defineStore("products", () => {
             return false;
         });
     };
-    const results = computed(() => _filter(filters.value));
+    // create another _mock_filter function to use the mock products
+    const _mock_filter = (_filters: Filters) => {
+        if (!products_mock.value || !products_mock.value.length) return [];
+        return products_mock.value.filter((product) => {
+            // return all if no filters in place
+            if (!is_filtered.value) return products_mock;
+            // return true if company matches
+            if (product.company === _filters.company) {
+                return true;
+            }
+            // return true if text search has any matches
+            if (
+                _filters.search &&
+                (product.name + product.notes + product.material)
+                    .toLowerCase()
+                    .includes(_filters.search.toLowerCase())
+            ) {
+                return true;
+            }
+            // return true if laptop size matches
+            if (product.laptop === _filters.laptop) {
+                return true;
+            }
+            // return true if boolean fields are set
+            const active_filters = Object.keys(_filters).reduce((acc, curr) => {
+                if (_filters[curr]) acc.push(curr);
+                return acc;
+            }, [] as string[]);
+            const matches = active_filters.map(
+                (field) => !is_falsy(product[field])
+            );
+            // if ALL the active filters match
+            if (matches.every(Boolean)) return true;
+
+            // this item didn't match on any of the above - do not include in results
+            return false;
+        });
+    };
+    const results = computed(() => _mock_filter(filters.value));
 
     return {
         products,
+        products_mock,
         fetchProducts,
         getBreakpoint,
         products_raw,
