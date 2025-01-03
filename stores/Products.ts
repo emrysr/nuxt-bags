@@ -1,5 +1,5 @@
 import slugify from "slugify";
-
+import { map } from "../utils";
 export interface Product {
     [x: string]: string;
 }
